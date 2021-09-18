@@ -1,0 +1,46 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'twitter_image_downloader'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=twitter_image_downloader",
+          "--package=twitter_image_downloader"
+        ],
+        "filter": {
+          "name": "twitter_image_downloader",
+          "kind": "bin"
+        }
+      },
+      "args": [
+      ],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'twitter_image_downloader'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=twitter_image_downloader",
+          "--package=twitter_image_downloader"
+        ],
+        "filter": {
+          "name": "twitter_image_downloader",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
