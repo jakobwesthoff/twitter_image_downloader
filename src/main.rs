@@ -219,6 +219,13 @@ async fn main() {
                 .default_value(current_working_directory.to_str().unwrap()),
         )
         .arg(
+            Arg::with_name("output_urls")
+                .short("u")
+                .long("output-url-list")
+                .value_name("FILENAME")
+                .takes_value(true),
+        )
+        .arg(
             Arg::with_name("username")
                 .help("Twitter username to download images from.")
                 .value_name("USERNAME")
@@ -237,7 +244,13 @@ async fn main() {
     );
     let canonicalized_directory = std::fs::canonicalize(output_directory).unwrap();
 
+    let output_urls = matches.value_of("output_urls");
+
     println!("Using output directory {:?}", canonicalized_directory);
+
+    if let Some(filename) = output_urls {
+        println!("Storing retrieved urls in {}", filename);
+    }
 
     let username = matches.value_of("username").unwrap();
     let max_image_count = matches
@@ -254,6 +267,18 @@ async fn main() {
     );
 
     let urls = get_urls(token, username.to_string(), max_image_count).await;
+
+    if let Some(filename) = output_urls {
+        let mut f = tokio::fs::File::create(filename)
+            .await
+            .expect(&format!("Could not open file for writing {}", filename));
+        for url in urls.iter() {
+            f.write_all(format!("{}\n", url).as_bytes())
+                .await
+                .expect(&format!("Could not write to file {}", filename));
+        }
+        drop(f);
+    }
 
     let max_requests = matches
         .value_of("max_requests")
